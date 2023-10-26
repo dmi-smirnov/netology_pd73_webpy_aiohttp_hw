@@ -1,0 +1,38 @@
+volumes:
+  pgdata:
+
+networks:
+  net:
+
+services:
+  dbms:
+    image: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data:rw
+    networks:
+      - net
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PWD}
+      - POSTGRES_DB=${DB_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  aiohttp_server:
+    image: netology_pd73_webpy_aiohttp_hw
+    networks:
+      - net
+    environment:
+      - POSTGRESQL_HOST_ADDR=dbms
+      - POSTGRESQL_HOST_PORT=${DB_PORT}
+      - POSTGRESQL_USER=${DB_USER}
+      - POSTGRESQL_PWD=${DB_PWD}
+      - POSTGRESQL_DB=${DB_NAME}
+    ports:
+      - ${HTTP_SRV_ADDR_PORT}:8080
+    depends_on:
+      dbms:
+        condition: service_healthy
