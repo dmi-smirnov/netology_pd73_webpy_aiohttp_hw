@@ -1,6 +1,6 @@
 # netology_pd73_webpy_aiohttp_hw
 
-## Сборка образа для контейнера с Flask и Gunicorn
+## Сборка образа для контейнера с веб-сервером
 Из директории с файлом `Dockerfile` выполнить:
 ```bash
 sudo docker build -t netology_pd73_webpy_aiohttp_hw .
